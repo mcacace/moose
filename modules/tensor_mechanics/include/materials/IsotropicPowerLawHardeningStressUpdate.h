@@ -28,24 +28,18 @@
  * suppressed to enable this class to solve for yield stress:
  * \f$ \sigma_y = \left( \frac{E^n}{K} \right)^{1/(n-1)} \f$
  */
-template <bool is_ad>
-class IsotropicPowerLawHardeningStressUpdateTempl
-  : public IsotropicPlasticityStressUpdateTempl<is_ad>
+class IsotropicPowerLawHardeningStressUpdate : public IsotropicPlasticityStressUpdate
 {
 public:
   static InputParameters validParams();
 
-  IsotropicPowerLawHardeningStressUpdateTempl(const InputParameters & parameters);
-
-  using Material::_qp;
-  using RadialReturnStressUpdateTempl<is_ad>::_three_shear_modulus;
+  IsotropicPowerLawHardeningStressUpdate(const InputParameters & parameters);
 
 protected:
-  virtual void
-  computeStressInitialize(const GenericReal<is_ad> & effective_trial_stress,
-                          const GenericRankFourTensor<is_ad> & elasticity_tensor) override;
-  virtual void computeYieldStress(const GenericRankFourTensor<is_ad> & elasticity_tensor) override;
-  virtual GenericReal<is_ad> computeHardeningDerivative(const GenericReal<is_ad> & scalar) override;
+  virtual void computeStressInitialize(const Real & effective_trial_stress,
+                                       const RankFourTensor & elasticity_tensor) override;
+  virtual void computeYieldStress(const RankFourTensor & elasticity_tensor) override;
+  virtual Real computeHardeningDerivative(Real scalar) override;
 
   ///@{ Power law hardening coefficients
   Real _K;
@@ -53,13 +47,10 @@ protected:
   ///@}
 
   /// Elastic constants
-  GenericReal<is_ad> _youngs_modulus;
+  Real _youngs_modulus;
 
   ///
-  GenericReal<is_ad> _effective_trial_stress;
+  Real _effective_trial_stress;
 
-  GenericReal<is_ad> getIsotropicLameLambda(const GenericRankFourTensor<is_ad> & elasticity_tensor);
+  Real getIsotropicLameLambda(const RankFourTensor & elasticity_tensor);
 };
-
-typedef IsotropicPowerLawHardeningStressUpdateTempl<false> IsotropicPowerLawHardeningStressUpdate;
-typedef IsotropicPowerLawHardeningStressUpdateTempl<true> ADIsotropicPowerLawHardeningStressUpdate;

@@ -37,7 +37,6 @@ struct cast_impl<ADReal, int>
 // typedef Eigen::Matrix<ADReal, 6, 6, Eigen::DontAlign> AnisotropyMatrix;
 
 typedef Eigen::Matrix<Real, 6, 6, Eigen::DontAlign> AnisotropyMatrixReal;
-typedef Eigen::Matrix<Real, 3, 3, Eigen::DontAlign> AnisotropyMatrixRealBlock;
 
 /**
  * ADGeneralizedRadialReturnStressUpdate computes the generalized radial return stress increment for
@@ -113,11 +112,6 @@ public:
    */
   bool requiresIsotropicTensor() override { return true; }
 
-  /**
-   * Check if an anisotropic matrix is block diagonal
-   */
-  bool isBlockDiagonal(const AnisotropyMatrixReal & A);
-
 protected:
   virtual void initQpStatefulProperties() override;
 
@@ -168,6 +162,8 @@ protected:
   void outputIterationSummary(std::stringstream * iter_output,
                               const unsigned int total_it) override;
 
+  virtual void rotateHillConstants(std::vector<Real> & hill_constants_input);
+
   /// Equivalent creep/plastic strain
   ADMaterialProperty<Real> & _effective_inelastic_strain;
   const MaterialProperty<Real> & _effective_inelastic_strain_old;
@@ -185,6 +181,12 @@ protected:
   /// Maximum integration error time step
   Real _max_integration_error_time_step;
 
-  /// Whether to use fully transformed Hill's tensor due to rigid body or large deformation kinematic rotation
-  const bool _use_transformation;
+  /// Angles for transformation of hill tensor
+  RealVectorValue _zyx_angles;
+
+  /// Transformation matrix
+  DenseMatrix<Real> _transformation_tensor;
+
+  /// Hill constants for orthotropic creep
+  std::vector<Real> _hill_constants;
 };

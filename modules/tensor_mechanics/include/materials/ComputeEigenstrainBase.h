@@ -22,11 +22,9 @@ public:
 
   ComputeEigenstrainBase(const InputParameters & parameters);
 
-  // We need this to be public for crystal plasticity eigenstrain calculations
-  virtual void computeQpProperties();
-
 protected:
   virtual void initQpStatefulProperties();
+  virtual void computeQpProperties();
 
   ///Compute the eigenstrain and store in _eigenstrain
   virtual void computeQpEigenstrain() = 0;

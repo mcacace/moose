@@ -26,23 +26,15 @@ protected:
   virtual void initQpStatefulProperties() override;
   virtual void computeQpProperties() override;
 
-  /// Property to compute from the given tensor
-  RankTwoScalarTools::InvariantType _invariant;
-
-  /// Are stateful properties required?
-  const bool _stateful;
-
-  /// Tensor to extract the invariant from
   const GenericMaterialProperty<RankTwoTensor, is_ad> & _tensor;
 
-  /// Old state of the tensor (required for effective strain calculation)
-  const MaterialProperty<RankTwoTensor> * _tensor_old;
+  /// Name of the stress/strain to be calculated
+  const std::string _property_name;
 
   /// Stress/strain value returned from calculation
   GenericMaterialProperty<Real, is_ad> & _property;
 
-  /// The property needs to be stateful when computing effective strain
-  const MaterialProperty<Real> * _property_old;
+  RankTwoScalarTools::INVARIANT_TYPE _invariant;
 };
 
 typedef RankTwoInvariantTempl<false> RankTwoInvariant;

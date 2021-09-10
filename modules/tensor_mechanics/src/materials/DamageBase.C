@@ -9,9 +9,8 @@
 
 #include "DamageBase.h"
 
-template <bool is_ad>
 InputParameters
-DamageBaseTempl<is_ad>::validParams()
+DamageBase::validParams()
 {
   InputParameters params = Material::validParams();
   params.addClassDescription(
@@ -29,39 +28,30 @@ DamageBaseTempl<is_ad>::validParams()
   return params;
 }
 
-template <bool is_ad>
-DamageBaseTempl<is_ad>::DamageBaseTempl(const InputParameters & parameters)
+DamageBase::DamageBase(const InputParameters & parameters)
   : Material(parameters),
     _base_name(isParamValid("base_name") ? getParam<std::string>("base_name") + "_" : "")
 {
 }
 
-template <bool is_ad>
 void
-DamageBaseTempl<is_ad>::setQp(unsigned int qp)
+DamageBase::setQp(unsigned int qp)
 {
   _qp = qp;
 }
 
-template <bool is_ad>
 void
-DamageBaseTempl<is_ad>::updateDamage()
+DamageBase::updateDamage()
 {
 }
 
-template <bool is_ad>
 Real
-DamageBaseTempl<is_ad>::computeTimeStepLimit()
+DamageBase::computeTimeStepLimit()
 {
   return std::numeric_limits<Real>::max();
 }
 
-template <bool is_ad>
 void
-DamageBaseTempl<is_ad>::finiteStrainRotation(
-    const GenericRankTwoTensor<is_ad> & /*rotation_increment*/)
+DamageBase::finiteStrainRotation(const RankTwoTensor & /*rotation_increment*/)
 {
 }
-
-template class DamageBaseTempl<false>;
-template class DamageBaseTempl<true>;

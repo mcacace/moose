@@ -7,8 +7,9 @@
 //* Licensed under LGPL 2.1, please see LICENSE for details
 //* https://www.gnu.org/licenses/lgpl-2.1.html
 
-#include "RankFourTensorTest.h"
-#include "RankThreeTensor.h"
+#include "gtest/gtest.h"
+
+#include "RankFourTensor.h"
 #include "RotationTensor.h"
 #include "MooseTypes.h"
 #include "ADReal.h"
@@ -17,7 +18,7 @@
 
 RankFourTensor iSymmetric = RankFourTensor(RankFourTensor::initIdentitySymmetricFour);
 
-TEST_F(RankFourTensorTest, invSymm1)
+TEST(RankFourTensor, invSymm1)
 {
   // inverse check for a standard symmetric-isotropic tensor
   std::vector<Real> input(2);
@@ -28,7 +29,7 @@ TEST_F(RankFourTensorTest, invSymm1)
   EXPECT_NEAR(0, (iSymmetric - a.invSymm() * a).L2norm(), 1E-5);
 }
 
-TEST_F(RankFourTensorTest, invSymm2)
+TEST(RankFourTensor, invSymm2)
 {
   // following (basically random) "a" tensor has symmetry
   // a_ijkl = a_jikl = a_ijlk
@@ -74,7 +75,7 @@ TEST_F(RankFourTensorTest, invSymm2)
   EXPECT_NEAR(0, (iSymmetric - a.invSymm() * a).L2norm(), 1E-5);
 }
 
-TEST_F(RankFourTensorTest, ADConversion)
+TEST(RankFourTensor, ADConversion)
 {
   RankFourTensor reg;
   ADRankFourTensor ad;
@@ -89,7 +90,7 @@ TEST_F(RankFourTensorTest, ADConversion)
   generic_reg = MetaPhysicL::raw_value(generic_ad);
 }
 
-TEST_F(RankFourTensorTest, anisotropic21)
+TEST(RankFourTensor, anisotropic21)
 {
 
   std::vector<Real> input(21);
@@ -182,7 +183,7 @@ TEST_F(RankFourTensorTest, anisotropic21)
   EXPECT_NEAR(0, (a - b).L2norm(), 1E-5);
 }
 
-TEST_F(RankFourTensorTest, anisotropic9)
+TEST(RankFourTensor, anisotropic9)
 {
 
   std::vector<Real> input(9);
@@ -275,7 +276,7 @@ TEST_F(RankFourTensorTest, anisotropic9)
   EXPECT_NEAR(0, (a - b).L2norm(), 1E-5);
 }
 
-TEST_F(RankFourTensorTest, rotation)
+TEST(RankFourTensor, rotation)
 {
   std::vector<Real> input(81);
   for (size_t i = 0; i < input.size(); ++i)
@@ -297,42 +298,4 @@ TEST_F(RankFourTensorTest, rotation)
   axy2.rotate(yxrot);
 
   EXPECT_NEAR(0, (axy1 - axy2).L2norm(), 1E-8);
-}
-
-TEST_F(RankFourTensorTest, transposeIj)
-{
-  const RankFourTensor computed_val = _r4.transposeIj();
-  for (unsigned int l = 0; l < 3; ++l)
-    for (unsigned int k = 0; k < 3; ++k)
-      for (unsigned int j = 0; j < 3; ++j)
-        for (unsigned int i = 0; i < 3; ++i)
-          EXPECT_NEAR(computed_val(i, j, k, l), _r4(j, i, k, l), 1e-5);
-}
-
-TEST_F(RankFourTensorTest, mixedProductIjklJ)
-{
-  const RankThreeTensor computed_val = _r4.mixedProductIjklJ(_v);
-  RankThreeTensor expected_val;
-  expected_val.fillFromInputVector({78,  84,  90,  96,  102, 108, 114, 120, 126,
-                                    240, 246, 252, 258, 264, 270, 276, 282, 288,
-                                    402, 408, 414, 420, 426, 432, 438, 444, 450},
-                                   RankThreeTensor::general);
-  for (unsigned int k = 0; k < 3; ++k)
-    for (unsigned int j = 0; j < 3; ++j)
-      for (unsigned int i = 0; i < 3; ++i)
-        EXPECT_NEAR(expected_val(i, j, k), computed_val(i, j, k), 1e-5);
-}
-
-TEST_F(RankFourTensorTest, mixedProductIjklI)
-{
-  const RankThreeTensor computed_val = _r4.mixedProductIjklI(_v);
-  RankThreeTensor expected_val;
-  expected_val.fillFromInputVector({222, 228, 234, 240, 246, 252, 258, 264, 270,
-                                    276, 282, 288, 294, 300, 306, 312, 318, 324,
-                                    330, 336, 342, 348, 354, 360, 366, 372, 378},
-                                   RankThreeTensor::general);
-  for (unsigned int k = 0; k < 3; ++k)
-    for (unsigned int j = 0; j < 3; ++j)
-      for (unsigned int i = 0; i < 3; ++i)
-        EXPECT_NEAR(expected_val(i, j, k), computed_val(i, j, k), 1e-5);
 }

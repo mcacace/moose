@@ -1,0 +1,106 @@
+{
+library : {
+name   : "Behaviour";
+type   : SHARED_LIBRARY;
+prefix : "lib";
+suffix : "so";
+install_path : "";
+sources : {
+"LinearElasticity-generic.cxx",
+"LinearElasticity.cxx",
+"IsotropicLinearHardeningPlasticity-generic.cxx",
+"IsotropicLinearHardeningPlasticity.cxx",
+"NonAssociativeDruckerPrager-generic.cxx",
+"NonAssociativeDruckerPrager.cxx",
+"RambergOsgoodNonLinearElasticity-generic.cxx",
+"RambergOsgoodNonLinearElasticity.cxx",
+"Marigo-generic.cxx",
+"Marigo.cxx",
+"BDT-generic.cxx",
+"BDT.cxx",
+"FichantLaborderieDamageBehaviour-generic.cxx",
+"FichantLaborderieDamageBehaviour.cxx"
+};
+cppflags : {
+"$(shell tfel-config --cppflags --compiler-flags)"
+};
+include_directories : {
+"$(shell tfel-config --include-path)"
+};
+link_directories : {
+"$(shell tfel-config --library-path)"
+};
+link_libraries : {
+"$(shell tfel-config --library-dependency --material --mfront-profiling)"
+};
+epts : {
+"LinearElasticity_AxisymmetricalGeneralisedPlaneStrain",
+"LinearElasticity_Axisymmetrical",
+"LinearElasticity_PlaneStrain",
+"LinearElasticity_GeneralisedPlaneStrain",
+"LinearElasticity_Tridimensional",
+"IsotropicLinearHardeningPlasticity_AxisymmetricalGeneralisedPlaneStrain",
+"IsotropicLinearHardeningPlasticity_Axisymmetrical",
+"IsotropicLinearHardeningPlasticity_PlaneStrain",
+"IsotropicLinearHardeningPlasticity_GeneralisedPlaneStrain",
+"IsotropicLinearHardeningPlasticity_Tridimensional",
+"NonAssociativeDruckerPrager_AxisymmetricalGeneralisedPlaneStrain",
+"NonAssociativeDruckerPrager_AxisymmetricalGeneralisedPlaneStress",
+"NonAssociativeDruckerPrager_Axisymmetrical",
+"NonAssociativeDruckerPrager_PlaneStress",
+"NonAssociativeDruckerPrager_PlaneStrain",
+"NonAssociativeDruckerPrager_GeneralisedPlaneStrain",
+"NonAssociativeDruckerPrager_Tridimensional",
+"RambergOsgoodNonLinearElasticity_AxisymmetricalGeneralisedPlaneStrain",
+"RambergOsgoodNonLinearElasticity_Axisymmetrical",
+"RambergOsgoodNonLinearElasticity_PlaneStrain",
+"RambergOsgoodNonLinearElasticity_GeneralisedPlaneStrain",
+"RambergOsgoodNonLinearElasticity_Tridimensional",
+"Marigo_AxisymmetricalGeneralisedPlaneStrain",
+"Marigo_Axisymmetrical",
+"Marigo_PlaneStrain",
+"Marigo_GeneralisedPlaneStrain",
+"Marigo_Tridimensional",
+"BDT_AxisymmetricalGeneralisedPlaneStrain",
+"BDT_Axisymmetrical",
+"BDT_PlaneStrain",
+"BDT_GeneralisedPlaneStrain",
+"BDT_Tridimensional",
+"FichantLaborderieDamageBehaviour_AxisymmetricalGeneralisedPlaneStrain",
+"FichantLaborderieDamageBehaviour_Axisymmetrical",
+"FichantLaborderieDamageBehaviour_PlaneStrain",
+"FichantLaborderieDamageBehaviour_GeneralisedPlaneStrain",
+"FichantLaborderieDamageBehaviour_Tridimensional"
+};
+};
+headers : {
+"MFront/GenericBehaviour/LinearElasticity-generic.hxx",
+"TFEL/Material/LinearElasticity.hxx",
+"TFEL/Material/LinearElasticityBehaviourData.hxx",
+"TFEL/Material/LinearElasticityIntegrationData.hxx",
+"MFront/GenericBehaviour/IsotropicLinearHardeningPlasticity-generic.hxx",
+"TFEL/Material/IsotropicLinearHardeningPlasticity.hxx",
+"TFEL/Material/IsotropicLinearHardeningPlasticityBehaviourData.hxx",
+"TFEL/Material/IsotropicLinearHardeningPlasticityIntegrationData.hxx",
+"MFront/GenericBehaviour/NonAssociativeDruckerPrager-generic.hxx",
+"TFEL/Material/NonAssociativeDruckerPrager.hxx",
+"TFEL/Material/NonAssociativeDruckerPragerBehaviourData.hxx",
+"TFEL/Material/NonAssociativeDruckerPragerIntegrationData.hxx",
+"MFront/GenericBehaviour/RambergOsgoodNonLinearElasticity-generic.hxx",
+"TFEL/Material/RambergOsgoodNonLinearElasticity.hxx",
+"TFEL/Material/RambergOsgoodNonLinearElasticityBehaviourData.hxx",
+"TFEL/Material/RambergOsgoodNonLinearElasticityIntegrationData.hxx",
+"MFront/GenericBehaviour/Marigo-generic.hxx",
+"TFEL/Material/Marigo.hxx",
+"TFEL/Material/MarigoBehaviourData.hxx",
+"TFEL/Material/MarigoIntegrationData.hxx",
+"MFront/GenericBehaviour/BDT-generic.hxx",
+"TFEL/Material/BDT.hxx",
+"TFEL/Material/BDTBehaviourData.hxx",
+"TFEL/Material/BDTIntegrationData.hxx",
+"MFront/GenericBehaviour/FichantLaborderieDamageBehaviour-generic.hxx",
+"TFEL/Material/FichantLaborderieDamageBehaviour.hxx",
+"TFEL/Material/FichantLaborderieDamageBehaviourBehaviourData.hxx",
+"TFEL/Material/FichantLaborderieDamageBehaviourIntegrationData.hxx"
+};
+};

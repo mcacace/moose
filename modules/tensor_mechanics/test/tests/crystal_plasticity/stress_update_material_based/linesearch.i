@@ -40,7 +40,7 @@
   [./fp_zz]
     type = RankTwoAux
     variable = fp_zz
-    rank_two_tensor = plastic_deformation_gradient
+    rank_two_tensor = fp
     index_j = 2
     index_i = 2
     execute_on = timestep_end

@@ -230,7 +230,7 @@ TensorMechanicsActionBase::outputPropertiesType()
     for (auto & r : r2cc.second.second)
       options += " " + r2cc.first + "_" + r;
 
-  return MultiMooseEnum(options, "", true);
+  return MultiMooseEnum(options);
 }
 
 void

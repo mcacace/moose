@@ -21,13 +21,12 @@
  * These models are designed to be called by another model, so they have
  * compute=false set.
  */
-template <bool is_ad>
-class DamageBaseTempl : public Material
+class DamageBase : public Material
 {
 public:
   static InputParameters validParams();
 
-  DamageBaseTempl(const InputParameters & parameters);
+  DamageBase(const InputParameters & parameters);
 
   /**
    * Update the internal variable(s) that evolve the damage
@@ -38,7 +37,7 @@ public:
    * Update the current stress tensor for effects of damage.
    * @param stress_new Undamaged stress to be modified by the damage model
    */
-  virtual void updateStressForDamage(GenericRankTwoTensor<is_ad> & stress_new) = 0;
+  virtual void updateStressForDamage(RankTwoTensor & stress_new) = 0;
 
   /**
    * Update the material constitutive matrix
@@ -59,7 +58,7 @@ public:
    * strain.
    * @param rotation_increment The finite-strain rotation increment
    */
-  virtual void finiteStrainRotation(const GenericRankTwoTensor<is_ad> & rotation_increment);
+  virtual void finiteStrainRotation(const RankTwoTensor & rotation_increment);
 
   /// Sets the value of the member variable _qp for use in inheriting classes
   void setQp(unsigned int qp);
@@ -73,6 +72,3 @@ protected:
   /// Base name optionally used as prefix to material tensor names
   const std::string _base_name;
 };
-
-typedef DamageBaseTempl<false> DamageBase;
-typedef DamageBaseTempl<true> ADDamageBase;

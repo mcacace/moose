@@ -10,13 +10,11 @@
 #include "CombinedScalarDamage.h"
 
 registerMooseObject("TensorMechanicsApp", CombinedScalarDamage);
-registerMooseObject("TensorMechanicsApp", ADCombinedScalarDamage);
 
-template <bool is_ad>
 InputParameters
-CombinedScalarDamageTempl<is_ad>::validParams()
+CombinedScalarDamage::validParams()
 {
-  InputParameters params = ScalarDamageBaseTempl<is_ad>::validParams();
+  InputParameters params = ScalarDamageBase::validParams();
 
   params.addClassDescription(
       "Scalar damage model which is computed as a function of multiple scalar damage models");
@@ -32,36 +30,31 @@ CombinedScalarDamageTempl<is_ad>::validParams()
   return params;
 }
 
-template <bool is_ad>
-CombinedScalarDamageTempl<is_ad>::CombinedScalarDamageTempl(const InputParameters & parameters)
-  : ScalarDamageBaseTempl<is_ad>(parameters),
-    _combination_type(
-        this->template getParam<MooseEnum>("combination_type").template getEnum<CombinationType>()),
-    _damage_models_names(this->template getParam<std::vector<MaterialName>>("damage_models"))
+CombinedScalarDamage::CombinedScalarDamage(const InputParameters & parameters)
+  : ScalarDamageBase(parameters),
+    _combination_type(getParam<MooseEnum>("combination_type").getEnum<CombinationType>()),
+    _damage_models_names(getParam<std::vector<MaterialName>>("damage_models"))
 {
 }
 
-template <bool is_ad>
 void
-CombinedScalarDamageTempl<is_ad>::initialSetup()
+CombinedScalarDamage::initialSetup()
 {
   for (unsigned int i = 0; i < _damage_models_names.size(); ++i)
   {
-    ScalarDamageBaseTempl<is_ad> * model = dynamic_cast<ScalarDamageBaseTempl<is_ad> *>(
-        &this->getMaterialByName(_damage_models_names[i]));
-
+    ScalarDamageBase * model =
+        dynamic_cast<ScalarDamageBase *>(&getMaterialByName(_damage_models_names[i]));
     if (model)
       _damage_models.push_back(model);
     else
-      this->template paramError("damage_model",
-                                "Damage Model " + _damage_models_names[i] +
-                                    " is not compatible with CombinedScalarDamage");
+      paramError("damage_model",
+                 "Damage Model " + _damage_models_names[i] +
+                     " is not compatible with CombinedScalarDamage");
   }
 }
 
-template <bool is_ad>
 void
-CombinedScalarDamageTempl<is_ad>::updateQpDamageIndex()
+CombinedScalarDamage::updateQpDamageIndex()
 {
   switch (_combination_type)
   {

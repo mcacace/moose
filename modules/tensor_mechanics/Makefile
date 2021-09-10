@@ -24,3 +24,6 @@ include $(MODULE_DIR)/modules.mk
 
 ###############################################################################
 # Additional special case targets should be added here
+# gmis interface support for mfront
+# ADDITIONAL_CPPFLAGS += -I/home/cacace/snippets/MFrontGenericInterfaceSupport/include/
+# ADDITIONAL_LIBS += -L/home/cacace/snippets/MFrontGenericInterfaceSupport/build/src/ -lMFrontGenericInterface

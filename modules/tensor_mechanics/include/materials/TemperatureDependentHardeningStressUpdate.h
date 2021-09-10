@@ -19,25 +19,20 @@ class PiecewiseLinear;
  * calculates stress as a function of temperature and plastic strain by
  * interpolating hardening functions at different temperatures input by the user.
  */
-template <bool is_ad>
-class TemperatureDependentHardeningStressUpdateTempl
-  : public IsotropicPlasticityStressUpdateTempl<is_ad>
+class TemperatureDependentHardeningStressUpdate : public IsotropicPlasticityStressUpdate
 {
 public:
   static InputParameters validParams();
 
-  TemperatureDependentHardeningStressUpdateTempl(const InputParameters & parameters);
-
-  using Material::_qp;
+  TemperatureDependentHardeningStressUpdate(const InputParameters & parameters);
 
 protected:
-  virtual void
-  computeStressInitialize(const GenericReal<is_ad> & effectiveTrialStress,
-                          const GenericRankFourTensor<is_ad> & elasticity_tensor) override;
+  virtual void computeStressInitialize(const Real & effectiveTrialStress,
+                                       const RankFourTensor & elasticity_tensor) override;
 
-  virtual void computeYieldStress(const GenericRankFourTensor<is_ad> & elasticity_tensor) override;
-  virtual GenericReal<is_ad> computeHardeningValue(const GenericReal<is_ad> & scalar) override;
-  virtual GenericReal<is_ad> computeHardeningDerivative(const GenericReal<is_ad> & scalar) override;
+  virtual void computeYieldStress(const RankFourTensor & elasticity_tensor) override;
+  virtual Real computeHardeningValue(Real scalar) override;
+  virtual Real computeHardeningDerivative(Real scalar) override;
 
   /**
    * Determines the section of the piecewise temperature dependent hardening
@@ -67,10 +62,5 @@ protected:
    * used in the interpolation of the hardening value, which is a piecewise
    * function of the temperature.
    */
-  GenericReal<is_ad> _hf_fraction;
+  Real _hf_fraction;
 };
-
-typedef TemperatureDependentHardeningStressUpdateTempl<false>
-    TemperatureDependentHardeningStressUpdate;
-typedef TemperatureDependentHardeningStressUpdateTempl<true>
-    ADTemperatureDependentHardeningStressUpdate;

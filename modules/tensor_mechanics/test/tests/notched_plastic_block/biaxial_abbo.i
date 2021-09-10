@@ -252,6 +252,6 @@
 [Outputs]
   file_base = biaxial_abbo
   perf_graph = true
-  exodus = false
+  exodus = true
   csv = true
 []

@@ -28,10 +28,13 @@ protected:
 
   const GenericMaterialProperty<RankTwoTensor, is_ad> & _tensor;
 
+  /// Name of the stress/strain to be calculated
+  const std::string _property_name;
+
   /// Stress/strain value returned from calculation
   GenericMaterialProperty<Real, is_ad> & _property;
 
-  RankTwoScalarTools::CylindricalComponent _cylindrical_component;
+  RankTwoScalarTools::CYLINDRICAL_COMPONENT _cylindrical_component;
 
   /// Point 1 used to determine the axis of rotation
   const Point _cylindrical_axis_point1;

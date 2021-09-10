@@ -92,6 +92,10 @@
     order = CONSTANT
     family = MONOMIAL
   [../]
+  [./peeq]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
   [./stress_max]
     order = CONSTANT
     family = MONOMIAL
@@ -113,6 +117,12 @@
     variable = stress_zz
     index_i = 2
     index_j = 2
+  [../]
+  [./peeq]
+    type = RankTwoScalarAux
+    rank_two_tensor = plastic_strain
+    variable = peeq
+    scalar_type = EffectiveStrain
   [../]
   [./stress_max]
     type = RankTwoScalarAux
@@ -138,18 +148,27 @@
   [./stress_zz]
     type = ElementAverageValue
     variable = stress_zz
+    block = 'ANY_BLOCK_ID 0'
+  [../]
+  [./peeq]
+    type = ElementAverageValue
+    variable = peeq
+    block = 'ANY_BLOCK_ID 0'
   [../]
   [./stress_max]
     type = ElementAverageValue
     variable = stress_max
+    block = 'ANY_BLOCK_ID 0'
   [../]
   [./stress_mid]
     type = ElementAverageValue
     variable = stress_mid
+    block = 'ANY_BLOCK_ID 0'
   [../]
   [./stress_min]
     type = ElementAverageValue
     variable = stress_min
+    block = 'ANY_BLOCK_ID 0'
   [../]
 []
 

@@ -16,29 +16,17 @@
 /**
  * Scalar damage model for which the damage is prescribed by another material
  */
-template <bool is_ad>
-class ScalarMaterialDamageTempl : public ScalarDamageBaseTempl<is_ad>
+class ScalarMaterialDamage : public ScalarDamageBase
 {
 public:
   static InputParameters validParams();
 
-  ScalarMaterialDamageTempl(const InputParameters & parameters);
+  ScalarMaterialDamage(const InputParameters & parameters);
 
 protected:
   virtual void updateQpDamageIndex() override;
 
   ///@{ Material property that provides the damage index
-  const GenericMaterialProperty<Real, is_ad> & _damage_property;
+  const MaterialProperty<Real> & _damage_property;
   ///@}
-
-  using Material::_current_elem;
-  using Material::_dt;
-  using Material::_q_point;
-  using Material::_qp;
-
-  using ScalarDamageBaseTempl<is_ad>::_damage_index;
-  using ScalarDamageBaseTempl<is_ad>::_base_name;
 };
-
-typedef ScalarMaterialDamageTempl<false> ScalarMaterialDamage;
-typedef ScalarMaterialDamageTempl<true> ADScalarMaterialDamage;
