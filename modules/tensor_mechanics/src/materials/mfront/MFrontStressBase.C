@@ -31,7 +31,9 @@ MFrontStressBase::MFrontStressBase(const InputParameters & parameters)
     _young_modulus(getParam<Real>("young_modulus")),
     _poisson_ratio(getParam<Real>("poisson_ratio")),
     _total_strain(getMaterialProperty<RankTwoTensor>(_base_name + "total_strain")),
-    _total_strain_old(getMaterialPropertyOld<RankTwoTensor>(_base_name + "total_strain"))
+    _total_strain_old(getMaterialPropertyOld<RankTwoTensor>(_base_name + "total_strain")),
+    _eq_stress(declareProperty<Real>("equivalent_stress")),
+    _eq_strain(declareProperty<Real>("equivalent_strain"))
 {
 }
 
@@ -78,6 +80,9 @@ MFrontStressBase::computeProperties()
     // add in extra stress - since we do not call
     // computeQpProperties in the base material
     _stress[_qp] += _extra_stress[_qp];
+    // compute additional materials
+    _eq_stress[_qp] = std::sqrt(3.0 / 2.0) * _stress[_qp].deviatoric().L2norm();
+    _eq_strain[_qp] = std::sqrt(2.0 / 3.0) * _total_strain[_qp].deviatoric().L2norm();
   }
 }
 

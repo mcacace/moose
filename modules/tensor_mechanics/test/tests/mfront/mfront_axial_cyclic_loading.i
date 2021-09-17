@@ -1,6 +1,6 @@
-# type: axial loading (cyclic) - no confinement
+# test: axial loading (cyclic) - no confinement
 # material: non associative Drucker-Prager perfect plasticity
-# unloading cycles are half of the loading
+# unloading cycles are half of the loading cycles in loading velocity
 
 [Mesh]
   type = GeneratedMesh
@@ -79,7 +79,7 @@
     cohesion = 1
     friction_angle = 20
     dilation_angle = 20
-    mfront_lib_name = '../../../plugins/MFront/src/libBehaviour.so'
+    mfront_lib_name = '../../../plugins/mfront/src/libBehaviour.so'
   []
 []
 
@@ -140,31 +140,31 @@
     type = SideAverageValue
     variable = disp_z
     boundary = right
-    outputs = csv
+    outputs = gnuplot
     execute_on = 'INITIAL TIMESTEP_END'
   [../]
   [./S_zz]
     type = ElementAverageValue
     variable = stress_zz
-    outputs = csv
+    outputs = gnuplot
     execute_on = 'INITIAL TIMESTEP_END'
   [../]
   [./Es_zz]
     type = ElementAverageValue
     variable = elastic_strain_zz
-    outputs = csv
+    outputs = gnuplot
     execute_on = 'INITIAL TIMESTEP_END'
   [../]
   [./Ts_zz]
     type = ElementAverageValue
     variable = total_strain_zz
-    outputs = csv
+    outputs = gnuplot
     execute_on = 'INITIAL TIMESTEP_END'
   [../]
   [./Ep_zz]
     type = ElementAverageValue
     variable = eq_plastic_strain
-    outputs = csv
+    outputs = gnuplot
     execute_on = 'INITIAL TIMESTEP_END'
   [../]
 []
@@ -192,6 +192,5 @@
   execute_on = 'timestep_end'
   print_linear_residuals = false
   perf_graph = true
-  exodus = true
-  csv = true
+  gnuplot = true
 []

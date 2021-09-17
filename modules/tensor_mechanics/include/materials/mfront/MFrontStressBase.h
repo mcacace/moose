@@ -52,4 +52,7 @@ protected:
   // mfront gradients
   const MaterialProperty<RankTwoTensor> & _total_strain;
   const MaterialProperty<RankTwoTensor> & _total_strain_old;
+  // some usefull material properties
+  MaterialProperty<Real> & _eq_stress;
+  MaterialProperty<Real> & _eq_strain;
 };

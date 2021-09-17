@@ -9,7 +9,7 @@
 
 #include "MFrontViscoPlasticity.h"
 
-registerMooseObject("GolemApp", MFrontViscoPlasticity);
+registerMooseObject("TensorMechanicsApp", MFrontViscoPlasticity);
 
 InputParameters
 MFrontViscoPlasticity::validParams()

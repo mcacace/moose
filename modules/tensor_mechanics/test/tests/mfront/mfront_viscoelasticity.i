@@ -1,8 +1,7 @@
 # benchmark: quasi-static stress build-up for a Maxwell rheology
 # set up from Gerya and Yuen[2007] first example
-# pure shear --> compression across the right and extension across the bottom
 # the original set up requires an incompressible material
-# here the bulk modulus is set to 1e12 Pa to fake incompressibility
+# here the poisson ratio is set close to 0.5 to fake incompressibility
 # analytical solution:
 # sigma = 2 * eps_dot * eta * (1 - exp(-G*t/eta))
 
@@ -17,29 +16,16 @@
   ymax = 1
 []
 
-[Variables]
-  [./disp_x]
-  [../]
-  [./disp_y]
-  [../]
-[]
-
 [GlobalParams]
   displacements = 'disp_x disp_y'
-  scaling_uo = scaling
 []
 
-[Kernels]
-  [./mech_x]
-    type = GolemMFrontKernelM
-    variable = disp_x
-    component = 0
-  [../]
-  [./mech_y]
-    type = GolemMFrontKernelM
-    variable = disp_y
-    component = 1
-  [../]
+[Modules/TensorMechanics/Master]
+  [all]
+    add_variables = true
+    strain = SMALL
+    incremental = true
+  []
 []
 
 [AuxVariables]
@@ -63,20 +49,22 @@
 
 [AuxKernels]
   [./Se_aux]
-    type = GolemVonMisesStressAux
+    type = MaterialRealAux
     variable = Se
-    execute_on = 'TIMESTEP_END'
+    property = equivalent_stress
+    execute_on = 'INITIAL TIMESTEP_END'
   [../]
   [./E_eqv_aux]
-    type = GolemMFrontEqvStrainAux
+    type = MaterialRealAux
     variable = E_eqv
-    execute_on = 'TIMESTEP_END'
+    property = equivalent_strain
+    execute_on = 'INITIAL TIMESTEP_END'
   [../]
   [./E_eqv_creep_aux]
-    type = GolemMFrontEqvStrainAux
+    type = MaterialRealAux
     variable = E_eqv_creep
-    strain_type = viscous
-    execute_on = 'TIMESTEP_END'
+    property = eq_viscous_strain
+    execute_on = 'INITIAL TIMESTEP_END'
   [../]
   [./eta_e_aux]
     type = MaterialRealAux
@@ -94,7 +82,7 @@
     value = 0.0
   [../]
   [./ux_right]
-    type = GolemVelocityBC
+    type = PresetVelocity
     variable = disp_x
     boundary = right
     velocity = -1.0e-14
@@ -106,7 +94,7 @@
     value = 0.0
   [../]
   [./uy_bottom]
-    type = GolemVelocityBC
+    type = PresetVelocity
     variable = disp_y
     boundary = bottom
     velocity = -1.0e-14
@@ -115,20 +103,15 @@
 
 [Materials]
   [./visco_elastic]
-    type = MFrontViscoElasticity
-    mfront_lib_name = '/home/cacace/projects/golem_devel/plugins/mfront/src/libBehaviour.so'
-    bulk_modulus = 1.0e+12
-    shear_modulus = 1.0e+10
+    type = MFrontImplicitNorton
+    mfront_lib_name = '../../../plugins/mfront/src/libBehaviour.so'
+    # bulk_modulus = 1.0e+12
+    # shear_modulus = 1.0e+10
+    young_modulus = 2.99e10
+    poisson_ratio = 0.495
     A_creep = 5.0e-23
     n_creep = 1.0
     Q_act = 0.0
-  [../]
-[]
-
-[UserObjects]
-  [./scaling]
-    type = GolemScaling
-    execute_on = 'INITIAL'
   [../]
 []
 
@@ -136,17 +119,17 @@
   [./S]
     type = ElementAverageValue
     variable = Se
-    outputs = csv
+    outputs = gnuplot
   [../]
   [./Eeqv]
     type = ElementAverageValue
     variable = E_eqv
-    outputs = csv
+    outputs = gnuplot
   [../]
   [./Eveqv]
     type = ElementAverageValue
     variable = E_eqv_creep
-    outputs = csv
+    outputs = gnuplot
   [../]
 []
 
@@ -187,6 +170,5 @@
   execute_on = 'INITIAL TIMESTEP_END'
   print_linear_residuals = false
   perf_graph = true
-  exodus = false
-  csv = true
+  gnuplot = true
 []

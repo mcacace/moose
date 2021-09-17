@@ -1,4 +1,4 @@
-# test: oedometer test
+# test: oedometer
 # material behaviour: non associative Drucker-Prager perfect plasticity
 
 [Mesh]
@@ -57,7 +57,7 @@
 [Materials]
   [plastic]
     type = MFrontNonAssociativeDruckerPrager
-    mfront_lib_name = '../../../plugins/MFront/src/libBehaviour.so'
+    mfront_lib_name = '../../../plugins/mfront/src/libBehaviour.so'
     young_modulus = 4500
     poisson_ratio = 0.125
     cohesion = 1
@@ -123,31 +123,31 @@
     type = SideAverageValue
     variable = disp_x
     boundary = right
-    outputs = csv
+    outputs = gnuplot
     execute_on = 'TIMESTEP_END'
   [../]
   [./S_xx]
     type = ElementAverageValue
     variable = stress_xx
-    outputs = csv
+    outputs = gnuplot
     execute_on = 'TIMESTEP_END'
   [../]
   [./Es_xx]
     type = ElementAverageValue
     variable = elastic_strain_xx
-    outputs = csv
+    outputs = gnuplot
     execute_on = 'TIMESTEP_END'
   [../]
   [./Ts_xx]
     type = ElementAverageValue
     variable = total_strain_xx
-    outputs = csv
+    outputs = gnuplot
     execute_on = 'TIMESTEP_END'
   [../]
   [./Ep_xx]
     type = ElementAverageValue
     variable = eq_plastic_strain
-    outputs = csv
+    outputs = gnuplot
     execute_on = 'TIMESTEP_END'
   [../]
 []
@@ -165,7 +165,6 @@
   type = Transient
   solve_type = 'NEWTON'
   automatic_scaling = true
-  # compute_scaling_once = false
   start_time = 0.0
   end_time = 100.0
   dt = 4.0
@@ -174,7 +173,7 @@
 
 [Outputs]
   execute_on = 'timestep_end'
-  file_base = DP_oedometer_dil_0
+  file_base = mfront_oedometer_0
   print_linear_residuals = false
   [./perf_graph]
     type = PerfGraphOutput
@@ -182,6 +181,6 @@
     heaviest_sections = 3
     execute_on = 'FINAL'
   [../]
-  exodus = true
-  csv = true
+  exodus = false
+  gnuplot = true
 []
