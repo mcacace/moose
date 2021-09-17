@@ -18,7 +18,7 @@
 #include "MGIS/Behaviour/Integrate.hxx"
 
 /**
- * Coupling material to use Abaqus UMAT models in MOOSE
+ * Coupling material to use MFront behaviour (via MGIS) in MOOSE
  */
 class MFrontStressBase : public ComputeStressBase
 {
@@ -37,15 +37,19 @@ protected:
   virtual void setExternalStateVariables(mgis::behaviour::BehaviourData & bd) = 0;
   virtual void setThermodynamicForces(mgis::behaviour::BehaviourData & bd) = 0;
   virtual void updateStateFromMFront(mgis::behaviour::BehaviourData & bd) = 0;
-
+  // global calls
   void setGradients(mgis::behaviour::BehaviourData & bd);
-
+  void computeJacobianFromMFront(mgis::behaviour::BehaviourData & bd);
   // name of the mfront library
   const std::string _mfront_lib_name;
   // mfront behaviour
   mgis::behaviour::Behaviour _b;
-
-  // basic materials for mfront
+  // elastic material properties
+  // Here I should really grant  more freedom to the user on the choice of the moduli to be given
+  // It should be the same we do in Golem
+  const Real _young_modulus;
+  const Real _poisson_ratio;
+  // mfront gradients
   const MaterialProperty<RankTwoTensor> & _total_strain;
   const MaterialProperty<RankTwoTensor> & _total_strain_old;
 };

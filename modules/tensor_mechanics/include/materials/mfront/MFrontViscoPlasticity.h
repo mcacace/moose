@@ -12,29 +12,45 @@
 #include "MFrontStressBase.h"
 
 /**
- * MFront Isotropic Linear Hardening Plastic material
+ * MFront visco-elastic Maxwell and non associative Drucker-Prager (perfect plasticity) material
+ * behaviour
  */
-class MFrontIsotropicLinearHardeningPlasticity : public MFrontStressBase
+class MFrontViscoPlasticity : public MFrontStressBase
 {
 public:
   static InputParameters validParams();
-
-  MFrontIsotropicLinearHardeningPlasticity(const InputParameters & parameters);
-  virtual ~MFrontIsotropicLinearHardeningPlasticity() {}
+  MFrontViscoPlasticity(const InputParameters & parameters);
+  virtual ~MFrontViscoPlasticity() {}
 
 protected:
   void initQpStatefulProperties() override;
 
   virtual void setMaterialProperties(mgis::behaviour::BehaviourData & bd) override;
   virtual void setInternalStateVariables(mgis::behaviour::BehaviourData & bd) override;
-  virtual void setExternalStateVariables(mgis::behaviour::BehaviourData & /*bd*/) override {}
+  virtual void setExternalStateVariables(mgis::behaviour::BehaviourData & bd) override;
   virtual void setThermodynamicForces(mgis::behaviour::BehaviourData & /*bd*/) override {}
   virtual void updateStateFromMFront(mgis::behaviour::BehaviourData & bd) override;
+  void computeEffectiveViscosity();
+  // coupled variable temperature
+  const VariableValue & _temp;
+  const VariableValue & _temp_old;
+  // creep
+  const Real & _Q_act;
+  const Real & _A_creep;
+  const Real & _n_creep;
+  const Real & _gas_constant;
   // plasticity
-  const Real _hardening_slope;
-  const Real _yield_strength;
+  const Real _coh;
+  Real _phi_angle;
+  Real _psi_angle;
+  const bool _convert_to_radians;
   // mfront internal state variables
+  MaterialProperty<Real> & _eqvs;
+  const MaterialProperty<Real> & _eqvs_old;
   MaterialProperty<Real> & _eqps;
   const MaterialProperty<Real> & _eqps_old;
   const MaterialProperty<RankTwoTensor> & _elastic_strain_old;
+  // mfront materials
+  MaterialProperty<Real> & _effective_viscosity;
+  MaterialProperty<RankTwoTensor> & _inelastic_strain;
 };

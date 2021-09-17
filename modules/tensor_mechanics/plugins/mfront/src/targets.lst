@@ -1,0 +1,112 @@
+{
+library : {
+name   : "Behaviour";
+type   : SHARED_LIBRARY;
+prefix : "lib";
+suffix : "so";
+install_path : "";
+sources : {
+"LinearElasticity-generic.cxx",
+"LinearElasticity.cxx",
+"IsotropicLinearHardeningPlasticity-generic.cxx",
+"IsotropicLinearHardeningPlasticity.cxx",
+"NonAssociativeDruckerPrager-generic.cxx",
+"NonAssociativeDruckerPrager.cxx",
+"RambergOsgoodNonLinearElasticity-generic.cxx",
+"RambergOsgoodNonLinearElasticity.cxx",
+"ViscoElasticity-generic.cxx",
+"ViscoElasticity.cxx",
+"ViscoPlasticity-generic.cxx",
+"ViscoPlasticity.cxx",
+"ImplicitNorton-generic.cxx",
+"ImplicitNorton.cxx"
+};
+cppflags : {
+"$(shell tfel-config --cppflags --compiler-flags)"
+};
+include_directories : {
+"$(shell tfel-config --include-path)"
+};
+link_directories : {
+"$(shell tfel-config --library-path)"
+};
+link_libraries : {
+"$(shell tfel-config --library-dependency --material --mfront-profiling)"
+};
+epts : {
+"LinearElasticity_AxisymmetricalGeneralisedPlaneStrain",
+"LinearElasticity_Axisymmetrical",
+"LinearElasticity_PlaneStrain",
+"LinearElasticity_GeneralisedPlaneStrain",
+"LinearElasticity_Tridimensional",
+"IsotropicLinearHardeningPlasticity_AxisymmetricalGeneralisedPlaneStrain",
+"IsotropicLinearHardeningPlasticity_Axisymmetrical",
+"IsotropicLinearHardeningPlasticity_PlaneStrain",
+"IsotropicLinearHardeningPlasticity_GeneralisedPlaneStrain",
+"IsotropicLinearHardeningPlasticity_Tridimensional",
+"NonAssociativeDruckerPrager_AxisymmetricalGeneralisedPlaneStrain",
+"NonAssociativeDruckerPrager_AxisymmetricalGeneralisedPlaneStress",
+"NonAssociativeDruckerPrager_Axisymmetrical",
+"NonAssociativeDruckerPrager_PlaneStress",
+"NonAssociativeDruckerPrager_PlaneStrain",
+"NonAssociativeDruckerPrager_GeneralisedPlaneStrain",
+"NonAssociativeDruckerPrager_Tridimensional",
+"RambergOsgoodNonLinearElasticity_AxisymmetricalGeneralisedPlaneStrain",
+"RambergOsgoodNonLinearElasticity_Axisymmetrical",
+"RambergOsgoodNonLinearElasticity_PlaneStrain",
+"RambergOsgoodNonLinearElasticity_GeneralisedPlaneStrain",
+"RambergOsgoodNonLinearElasticity_Tridimensional",
+"ViscoElasticity_AxisymmetricalGeneralisedPlaneStrain",
+"ViscoElasticity_AxisymmetricalGeneralisedPlaneStress",
+"ViscoElasticity_Axisymmetrical",
+"ViscoElasticity_PlaneStress",
+"ViscoElasticity_PlaneStrain",
+"ViscoElasticity_GeneralisedPlaneStrain",
+"ViscoElasticity_Tridimensional",
+"ViscoPlasticity_AxisymmetricalGeneralisedPlaneStrain",
+"ViscoPlasticity_AxisymmetricalGeneralisedPlaneStress",
+"ViscoPlasticity_Axisymmetrical",
+"ViscoPlasticity_PlaneStress",
+"ViscoPlasticity_PlaneStrain",
+"ViscoPlasticity_GeneralisedPlaneStrain",
+"ViscoPlasticity_Tridimensional",
+"ImplicitNorton_AxisymmetricalGeneralisedPlaneStrain",
+"ImplicitNorton_AxisymmetricalGeneralisedPlaneStress",
+"ImplicitNorton_Axisymmetrical",
+"ImplicitNorton_PlaneStress",
+"ImplicitNorton_PlaneStrain",
+"ImplicitNorton_GeneralisedPlaneStrain",
+"ImplicitNorton_Tridimensional"
+};
+};
+headers : {
+"MFront/GenericBehaviour/LinearElasticity-generic.hxx",
+"TFEL/Material/LinearElasticity.hxx",
+"TFEL/Material/LinearElasticityBehaviourData.hxx",
+"TFEL/Material/LinearElasticityIntegrationData.hxx",
+"MFront/GenericBehaviour/IsotropicLinearHardeningPlasticity-generic.hxx",
+"TFEL/Material/IsotropicLinearHardeningPlasticity.hxx",
+"TFEL/Material/IsotropicLinearHardeningPlasticityBehaviourData.hxx",
+"TFEL/Material/IsotropicLinearHardeningPlasticityIntegrationData.hxx",
+"MFront/GenericBehaviour/NonAssociativeDruckerPrager-generic.hxx",
+"TFEL/Material/NonAssociativeDruckerPrager.hxx",
+"TFEL/Material/NonAssociativeDruckerPragerBehaviourData.hxx",
+"TFEL/Material/NonAssociativeDruckerPragerIntegrationData.hxx",
+"MFront/GenericBehaviour/RambergOsgoodNonLinearElasticity-generic.hxx",
+"TFEL/Material/RambergOsgoodNonLinearElasticity.hxx",
+"TFEL/Material/RambergOsgoodNonLinearElasticityBehaviourData.hxx",
+"TFEL/Material/RambergOsgoodNonLinearElasticityIntegrationData.hxx",
+"MFront/GenericBehaviour/ViscoElasticity-generic.hxx",
+"TFEL/Material/ViscoElasticity.hxx",
+"TFEL/Material/ViscoElasticityBehaviourData.hxx",
+"TFEL/Material/ViscoElasticityIntegrationData.hxx",
+"MFront/GenericBehaviour/ViscoPlasticity-generic.hxx",
+"TFEL/Material/ViscoPlasticity.hxx",
+"TFEL/Material/ViscoPlasticityBehaviourData.hxx",
+"TFEL/Material/ViscoPlasticityIntegrationData.hxx",
+"MFront/GenericBehaviour/ImplicitNorton-generic.hxx",
+"TFEL/Material/ImplicitNorton.hxx",
+"TFEL/Material/ImplicitNortonBehaviourData.hxx",
+"TFEL/Material/ImplicitNortonIntegrationData.hxx"
+};
+};

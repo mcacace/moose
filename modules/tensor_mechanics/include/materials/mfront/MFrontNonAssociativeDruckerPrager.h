@@ -12,8 +12,9 @@
 #include "MFrontStressBase.h"
 
 /**
- * MFront Non associative Drucker-Prager material behaviour
+ * MFront Non associative Drucker-Prager material behaviour - perfect plasticity
  */
+
 class MFrontNonAssociativeDruckerPrager : public MFrontStressBase
 {
 public:
@@ -29,16 +30,12 @@ protected:
   virtual void setExternalStateVariables(mgis::behaviour::BehaviourData & /*bd*/) override {}
   virtual void setThermodynamicForces(mgis::behaviour::BehaviourData & /*bd*/) override {}
   virtual void updateStateFromMFront(mgis::behaviour::BehaviourData & bd) override;
-
-  const Real _young_modulus;
-  const Real _poisson_ratio;
+  // plasticity
   const Real _cohesion;
   Real _friction_angle;
   Real _dilation_angle;
-
   const bool _convert_to_radians;
-
-  // material for setting up mfront internal state variables
+  // mfront internal state variables
   MaterialProperty<Real> & _eqps;
   const MaterialProperty<Real> & _eqps_old;
   const MaterialProperty<RankTwoTensor> & _elastic_strain_old;

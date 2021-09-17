@@ -12,29 +12,40 @@
 #include "MFrontStressBase.h"
 
 /**
- * MFront Isotropic Linear Hardening Plastic material
+ * MFront Implicit Norton creep material
  */
-class MFrontIsotropicLinearHardeningPlasticity : public MFrontStressBase
+class MFrontImplicitNorton : public MFrontStressBase
 {
 public:
   static InputParameters validParams();
 
-  MFrontIsotropicLinearHardeningPlasticity(const InputParameters & parameters);
-  virtual ~MFrontIsotropicLinearHardeningPlasticity() {}
+  MFrontImplicitNorton(const InputParameters & parameters);
+  virtual ~MFrontImplicitNorton() {}
 
 protected:
-  void initQpStatefulProperties() override;
+  virtual void initQpStatefulProperties() override;
 
   virtual void setMaterialProperties(mgis::behaviour::BehaviourData & bd) override;
   virtual void setInternalStateVariables(mgis::behaviour::BehaviourData & bd) override;
-  virtual void setExternalStateVariables(mgis::behaviour::BehaviourData & /*bd*/) override {}
+  virtual void setExternalStateVariables(mgis::behaviour::BehaviourData & bd) override;
   virtual void setThermodynamicForces(mgis::behaviour::BehaviourData & /*bd*/) override {}
   virtual void updateStateFromMFront(mgis::behaviour::BehaviourData & bd) override;
-  // plasticity
-  const Real _hardening_slope;
-  const Real _yield_strength;
+
+  void computeEffectiveViscosity();
+
+  // coupled variable temperature
+  const VariableValue & _temp;
+  const VariableValue & _temp_old;
+  // Norton creep
+  const Real & _Q_act;
+  const Real & _A_creep;
+  const Real & _n_creep;
+  const Real & _gas_constant;
   // mfront internal state variables
-  MaterialProperty<Real> & _eqps;
-  const MaterialProperty<Real> & _eqps_old;
+  MaterialProperty<Real> & _eqvs;
+  const MaterialProperty<Real> & _eqvs_old;
   const MaterialProperty<RankTwoTensor> & _elastic_strain_old;
+  // additional material output
+  MaterialProperty<RankTwoTensor> & _viscous_strain;
+  MaterialProperty<Real> & _effective_viscosity;
 };

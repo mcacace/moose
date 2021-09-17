@@ -7,51 +7,71 @@
 //* Licensed under LGPL 2.1, please see LICENSE for details
 //* https://www.gnu.org/licenses/lgpl-2.1.html
 
-#include "MFrontIsotropicLinearHardeningPlasticity.h"
+#include "libmesh/utility.h"
 
-registerMooseObject("TensorMechanicsApp", MFrontIsotropicLinearHardeningPlasticity);
+#include "MFrontNonAssociativeDruckerPrager.h"
+
+registerMooseObject("TensorMechanicsApp", MFrontNonAssociativeDruckerPrager);
 
 InputParameters
-MFrontIsotropicLinearHardeningPlasticity::validParams()
+MFrontNonAssociativeDruckerPrager::validParams()
 {
   InputParameters params = MFrontStressBase::validParams();
-  params.addClassDescription(
-      "mfront model - isotropic plasticity with linear hardening - implicit implementation.");
-  params.addRequiredParam<Real>("hardening_slope", "The hardening slope.");
-  params.addRequiredParam<Real>("yield_strength", "The yield strength.");
+  params.addClassDescription("mfront model - non associative Drucker-Prager (perfect) plasticity.");
+  params.addRequiredParam<Real>("cohesion", "The cohesion.");
+  params.addRequiredParam<Real>("friction_angle", "The friction angle.");
+  params.addRequiredParam<Real>("dilation_angle", "The dilation angle.");
+  params.addParam<bool>(
+      "convert_to_radians", true, "Whether to convert the friction and dilation angle to radians");
   return params;
 }
 
-MFrontIsotropicLinearHardeningPlasticity::MFrontIsotropicLinearHardeningPlasticity(
+MFrontNonAssociativeDruckerPrager::MFrontNonAssociativeDruckerPrager(
     const InputParameters & parameters)
   : MFrontStressBase(parameters),
-    _hardening_slope(getParam<Real>("hardening_slope")),
-    _yield_strength(getParam<Real>("yield_strength")),
+    _cohesion(getParam<Real>("cohesion")),
+    _friction_angle(getParam<Real>("friction_angle")),
+    _dilation_angle(getParam<Real>("dilation_angle")),
+    _convert_to_radians(getParam<bool>("convert_to_radians")),
     _eqps(declareProperty<Real>("eq_plastic_strain")),
     _eqps_old(getMaterialPropertyOld<Real>("eq_plastic_strain")),
     _elastic_strain_old(getMaterialPropertyOld<RankTwoTensor>(_base_name + "elastic_strain"))
 {
-  std::string behaviour_name = "IsotropicLinearHardeningPlasticity";
+  // load the behaviour
+  std::string behaviour_name = "NonAssociativeDruckerPrager";
   _b = mgis::behaviour::load(
       _mfront_lib_name, behaviour_name, mgis::behaviour::Hypothesis::TRIDIMENSIONAL);
+
+  if (_convert_to_radians)
+  {
+    _friction_angle *= libMesh::pi / 180;
+    _dilation_angle *= libMesh::pi / 180;
+  }
+  if (_friction_angle < 0.0 || _dilation_angle < 0.0 || _friction_angle > libMesh::pi / 2.0 ||
+      _dilation_angle > libMesh::pi / 2.0)
+    mooseError(name(), ": both friction and dilation angles must lie in [0, Pi/2]... aborting.");
+  if (_friction_angle < _dilation_angle)
+    mooseError(name(), ": friction angle should not be smaller than dilation angle ... aborting.");
+  if (_cohesion < 0.0)
+    mooseError(name(), ": cohesion should not be negative ... aborting.");
 }
 
 void
-MFrontIsotropicLinearHardeningPlasticity::initQpStatefulProperties()
+MFrontNonAssociativeDruckerPrager::initQpStatefulProperties()
 {
   _eqps[_qp] = 0.0;
   ComputeStressBase::initQpStatefulProperties();
 }
 
 void
-MFrontIsotropicLinearHardeningPlasticity::setMaterialProperties(mgis::behaviour::BehaviourData & bd)
+MFrontNonAssociativeDruckerPrager::setMaterialProperties(mgis::behaviour::BehaviourData & bd)
 {
-  bd.s1.material_properties = {_young_modulus, _poisson_ratio, _hardening_slope, _yield_strength};
+  bd.s1.material_properties = {
+      _young_modulus, _poisson_ratio, _cohesion, _friction_angle, _dilation_angle};
 }
 
 void
-MFrontIsotropicLinearHardeningPlasticity::setInternalStateVariables(
-    mgis::behaviour::BehaviourData & bd)
+MFrontNonAssociativeDruckerPrager::setInternalStateVariables(mgis::behaviour::BehaviourData & bd)
 {
   bd.s0.internal_state_variables = {_elastic_strain_old[_qp](0, 0),
                                     _elastic_strain_old[_qp](1, 1),
@@ -63,7 +83,7 @@ MFrontIsotropicLinearHardeningPlasticity::setInternalStateVariables(
 }
 
 void
-MFrontIsotropicLinearHardeningPlasticity::updateStateFromMFront(mgis::behaviour::BehaviourData & bd)
+MFrontNonAssociativeDruckerPrager::updateStateFromMFront(mgis::behaviour::BehaviourData & bd)
 {
   // update the stress tensor
   _stress[_qp] = RankTwoTensor(bd.s1.thermodynamic_forces[0],

@@ -28,7 +28,4 @@ protected:
   virtual void setExternalStateVariables(mgis::behaviour::BehaviourData & /*bd*/) override {}
   virtual void setThermodynamicForces(mgis::behaviour::BehaviourData & /*bd*/) override {}
   virtual void updateStateFromMFront(mgis::behaviour::BehaviourData & bd) override;
-
-  const Real _young_modulus;
-  const Real _poisson_ratio;
 };

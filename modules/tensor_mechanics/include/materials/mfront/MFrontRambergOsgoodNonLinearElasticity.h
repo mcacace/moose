@@ -29,14 +29,11 @@ protected:
   virtual void setExternalStateVariables(mgis::behaviour::BehaviourData & /*bd*/) override {}
   virtual void setThermodynamicForces(mgis::behaviour::BehaviourData & /*bd*/) override {}
   virtual void updateStateFromMFront(mgis::behaviour::BehaviourData & bd) override;
-
-  const Real _young_modulus;
-  const Real _poisson_ratio;
-
+  // non linear elasticity
   const Real _n;
   const Real _alpha;
   const Real _yield_strength;
-
+  // mfront internal state variable
   MaterialProperty<Real> & _von_mises_stress;
   const MaterialProperty<Real> & _von_mises_stress_old;
 };
