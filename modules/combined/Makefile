@@ -19,7 +19,25 @@ include $(FRAMEWORK_DIR)/build.mk
 include $(FRAMEWORK_DIR)/moose.mk
 
 ################################## MODULES ################################
-ALL_MODULES       := yes
+#ALL_MODULES       := yes
+ALL_MODULES         := no
+
+CHEMICAL_REACTIONS  := no
+CONTACT             := no
+FLUID_PROPERTIES    := yes
+HEAT_CONDUCTION     := no
+MISC                := no
+NAVIER_STOKES       := no
+PHASE_FIELD         := no
+RDG                 := no
+RICHARDS            := no
+SOLID_MECHANICS     := no
+STOCHASTIC_TOOLS    := no
+TENSOR_MECHANICS    := yes
+WATER_STEAM_EOS     := yes
+XFEM                := no
+POROUS_FLOW         := yes
+
 INCLUDE_COMBINED  := no
 USE_TEST_LIBS     := yes
 SKIP_LOADER       := yes
@@ -35,3 +53,6 @@ include            $(FRAMEWORK_DIR)/app.mk
 
 ###############################################################################
 # Additional special case targets should be added here
+# gmis interface support for mfront
+ADDITIONAL_CPPFLAGS += -I/home/cacace/snippets/MFrontGenericInterfaceSupport/include/
+ADDITIONAL_LIBS += -L/home/cacace/snippets/MFrontGenericInterfaceSupport/build/src/ -lMFrontGenericInterface
